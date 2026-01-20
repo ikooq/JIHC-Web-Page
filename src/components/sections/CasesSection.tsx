@@ -1,4 +1,6 @@
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { fadeUpVariants, staggerContainer, cardVariants, viewportSettings } from "@/lib/animations";
 
 const cases = [
   {
@@ -37,68 +39,109 @@ const cases = [
 
 const CasesSection = () => {
   return (
-    <section id="cases" className="py-20 md:py-32 bg-muted/50">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="cases" className="py-28 md:py-40 bg-muted/30 relative overflow-hidden">
+      {/* Background accent */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -right-64 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[100px]" />
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-4 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportSettings}
+          variants={staggerContainer}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
+          <motion.span
+            variants={fadeUpVariants}
+            className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-6 tracking-wide"
+          >
             Our Work
-          </span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
+          </motion.span>
+          <motion.h2
+            variants={fadeUpVariants}
+            className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6 leading-tight"
+          >
             Prominent Case Studies
-          </h2>
-          <p className="text-muted-foreground text-lg">
+          </motion.h2>
+          <motion.p
+            variants={fadeUpVariants}
+            className="text-muted-foreground text-lg md:text-xl leading-relaxed"
+          >
             Real results for real clients. Here's how we've helped industry leaders transform their digital presence.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Cases Grid */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          {cases.map((caseItem, index) => (
-            <div
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportSettings}
+          variants={staggerContainer}
+          className="grid md:grid-cols-2 gap-8"
+        >
+          {cases.map((caseItem) => (
+            <motion.div
               key={caseItem.id}
-              className={`group relative rounded-2xl overflow-hidden border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer ${
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className={`group relative rounded-3xl overflow-hidden border transition-all duration-500 cursor-pointer ${
                 caseItem.color === "fintech"
-                  ? "bg-gradient-to-br from-fintech/5 via-card to-fintech/10 border-fintech/20 hover:border-fintech/40"
-                  : "bg-gradient-to-br from-healthcare/5 via-card to-healthcare/10 border-healthcare/20 hover:border-healthcare/40"
+                  ? "bg-gradient-to-br from-card via-card to-fintech/5 border-fintech/15 hover:border-fintech/35 hover:shadow-2xl hover:shadow-fintech/10"
+                  : "bg-gradient-to-br from-card via-card to-healthcare/5 border-healthcare/15 hover:border-healthcare/35 hover:shadow-2xl hover:shadow-healthcare/10"
               }`}
-              style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image placeholder area */}
-              <div className={`h-48 md:h-56 relative overflow-hidden ${
-                caseItem.color === "fintech" ? "bg-fintech/10" : "bg-healthcare/10"
+              <div className={`h-52 md:h-64 relative overflow-hidden ${
+                caseItem.color === "fintech" ? "bg-gradient-to-br from-fintech/10 to-fintech/5" : "bg-gradient-to-br from-healthcare/10 to-healthcare/5"
               }`}>
                 {/* Abstract pattern */}
-                <div className="absolute inset-0 opacity-30">
-                  <div className={`absolute top-1/4 -left-10 w-40 h-40 rounded-full blur-3xl ${
-                    caseItem.color === "fintech" ? "bg-fintech" : "bg-healthcare"
-                  }`} />
-                  <div className={`absolute bottom-1/4 -right-10 w-32 h-32 rounded-full blur-2xl ${
-                    caseItem.color === "fintech" ? "bg-fintech" : "bg-healthcare"
-                  }`} />
+                <div className="absolute inset-0 opacity-40">
+                  <motion.div
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                    className={`absolute top-1/4 -left-10 w-48 h-48 rounded-full blur-[60px] ${
+                      caseItem.color === "fintech" ? "bg-fintech" : "bg-healthcare"
+                    }`}
+                  />
+                  <motion.div
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.2 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className={`absolute bottom-1/4 -right-10 w-36 h-36 rounded-full blur-[50px] ${
+                      caseItem.color === "fintech" ? "bg-fintech" : "bg-healthcare"
+                    }`}
+                  />
                 </div>
                 
                 {/* Category badge */}
-                <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold ${
+                <div className={`absolute top-5 left-5 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide ${
                   caseItem.color === "fintech"
-                    ? "bg-fintech text-fintech-foreground"
-                    : "bg-healthcare text-healthcare-foreground"
+                    ? "bg-fintech text-fintech-foreground shadow-lg shadow-fintech/30"
+                    : "bg-healthcare text-healthcare-foreground shadow-lg shadow-healthcare/30"
                 }`}>
                   {caseItem.category}
                 </div>
 
                 {/* Arrow icon */}
-                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileHover={{ opacity: 1, y: 0 }}
+                  className="absolute top-5 right-5 w-11 h-11 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+                >
                   <ArrowUpRight className="w-5 h-5 text-foreground" />
-                </div>
+                </motion.div>
               </div>
 
               {/* Content */}
-              <div className="p-6 md:p-8">
-                <h3 className="text-xl md:text-2xl font-display font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
+              <div className="p-8">
+                <h3 className="text-xl md:text-2xl font-display font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
                   {caseItem.title}
                 </h3>
-                <p className="text-muted-foreground mb-4 line-clamp-2">
+                <p className="text-muted-foreground mb-5 line-clamp-2 leading-relaxed">
                   {caseItem.description}
                 </p>
                 
@@ -107,16 +150,16 @@ const CasesSection = () => {
                   {caseItem.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 rounded-md bg-muted text-muted-foreground text-xs font-medium"
+                      className="px-3 py-1.5 rounded-lg bg-muted/80 text-muted-foreground text-xs font-medium border border-border/50"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -7,10 +7,12 @@ import CasesSection from "@/components/sections/CasesSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/layout/Footer";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 
 const Index = () => {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
+      <ScrollProgress />
       <Navbar />
       <HeroSection />
       <ServicesSection />
