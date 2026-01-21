@@ -1,25 +1,26 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Linkedin, Twitter, Github } from "lucide-react";
 import { fadeUpVariants, staggerContainer, viewportSettings } from "@/lib/animations";
 
 const footerLinks = {
   services: [
-    { label: "Web Development", href: "#services" },
-    { label: "Mobile Development", href: "#services" },
-    { label: "Consulting", href: "#services" },
-    { label: "System Integration", href: "#services" },
+    { label: "Web Development", href: "/services" },
+    { label: "Mobile Development", href: "/services" },
+    { label: "Consulting", href: "/services" },
+    { label: "System Integration", href: "/services" },
   ],
   company: [
-    { label: "About Us", href: "#why-us" },
-    { label: "Case Studies", href: "#cases" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Contact", href: "#contact" },
+    { label: "About Us", href: "/about" },
+    { label: "Case Studies", href: "/cases" },
+    { label: "Testimonials", href: "/#testimonials" },
+    { label: "Contact", href: "/#contact" },
   ],
   industries: [
-    { label: "FinTech", href: "#services" },
-    { label: "Healthcare", href: "#services" },
-    { label: "Banking", href: "#services" },
-    { label: "Telemedicine", href: "#services" },
+    { label: "FinTech", href: "/services" },
+    { label: "Healthcare", href: "/services" },
+    { label: "Banking", href: "/services" },
+    { label: "Telemedicine", href: "/services" },
   ],
 };
 
@@ -38,12 +39,12 @@ const Footer = () => {
         >
           {/* Brand Column */}
           <motion.div variants={fadeUpVariants} className="lg:col-span-2">
-            <a href="#" className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center shadow-lg shadow-accent/20">
-                <span className="text-accent-foreground font-display font-bold text-2xl">A</span>
+            <Link to="/" className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center shadow-lg">
+                <span className="text-white font-display font-bold text-2xl">A</span>
               </div>
               <span className="text-2xl font-display font-bold">Auxility</span>
-            </a>
+            </Link>
             <p className="text-primary-foreground/60 max-w-sm mb-8 leading-relaxed">
               Building secure, compliant, and user-friendly custom software for FinTech and Healthcare industries.
             </p>
@@ -58,7 +59,7 @@ const Footer = () => {
                   href="#"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center hover:bg-white/20 transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -78,12 +79,12 @@ const Footer = () => {
               <ul className="space-y-4">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-primary-foreground/60 hover:text-accent transition-colors text-sm"
+                    <Link
+                      to={link.href}
+                      className="text-primary-foreground/60 hover:text-white transition-colors text-sm"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
