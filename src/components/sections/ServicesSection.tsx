@@ -29,13 +29,11 @@ const additionalServices = [
 const ServicesSection = () => {
   return (
     <section id="services" className="py-28 md:py-40 bg-background relative">
-      {/* Subtle background accent */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-accent/3 to-transparent" />
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-glow opacity-50" />
       </div>
 
       <div className="container mx-auto px-4 md:px-6 relative">
-        {/* Section Header */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -45,7 +43,7 @@ const ServicesSection = () => {
         >
           <motion.span
             variants={fadeUpVariants}
-            className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-6 tracking-wide"
+            className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6 tracking-wide"
           >
             Our Expertise
           </motion.span>
@@ -65,7 +63,6 @@ const ServicesSection = () => {
           </motion.p>
         </motion.div>
 
-        {/* Main Services Cards */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -77,27 +74,24 @@ const ServicesSection = () => {
             <motion.div
               key={service.title}
               variants={cardVariants}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className={`group relative rounded-3xl p-10 md:p-12 transition-all duration-500 cursor-pointer ${
+              whileHover={{ y: -8 }}
+              className={`card-3d p-10 md:p-12 ${
                 service.category === "fintech"
-                  ? "bg-gradient-to-br from-fintech/5 via-card to-fintech/8 border border-fintech/15 hover:border-fintech/30 hover:shadow-2xl hover:shadow-fintech/10"
-                  : "bg-gradient-to-br from-healthcare/5 via-card to-healthcare/8 border border-healthcare/15 hover:border-healthcare/30 hover:shadow-2xl hover:shadow-healthcare/10"
+                  ? "bg-gradient-to-br from-fintech/5 via-card to-fintech/10"
+                  : "bg-gradient-to-br from-healthcare/5 via-card to-healthcare/10"
               }`}
             >
-              {/* Icon */}
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
                 className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-8 shadow-lg ${
                   service.category === "fintech"
-                    ? "bg-fintech text-fintech-foreground shadow-fintech/25"
-                    : "bg-healthcare text-healthcare-foreground shadow-healthcare/25"
+                    ? "bg-fintech text-fintech-foreground shadow-fintech/30"
+                    : "bg-healthcare text-healthcare-foreground shadow-healthcare/30"
                 }`}
               >
                 <service.icon className="w-8 h-8" />
               </motion.div>
 
-              {/* Content */}
               <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
                 {service.title}
               </h3>
@@ -105,33 +99,24 @@ const ServicesSection = () => {
                 {service.description}
               </p>
 
-              {/* Features */}
               <div className="flex flex-wrap gap-3">
                 {service.features.map((feature) => (
                   <span
                     key={feature}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
                       service.category === "fintech"
-                        ? "bg-fintech/10 text-fintech group-hover:bg-fintech/15"
-                        : "bg-healthcare/10 text-healthcare group-hover:bg-healthcare/15"
+                        ? "bg-fintech/10 text-fintech"
+                        : "bg-healthcare/10 text-healthcare"
                     }`}
                   >
                     {feature}
                   </span>
                 ))}
               </div>
-
-              {/* Hover decoration */}
-              <div
-                className={`absolute top-6 right-6 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${
-                  service.category === "fintech" ? "bg-fintech/15" : "bg-healthcare/15"
-                }`}
-              />
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Additional Services */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -144,14 +129,9 @@ const ServicesSection = () => {
               key={service.label}
               variants={cardVariants}
               whileHover={{ y: -4, scale: 1.02 }}
-              className="flex flex-col items-center justify-center p-8 rounded-2xl bg-card border border-border hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 group cursor-pointer"
+              className="card-3d flex flex-col items-center justify-center p-8"
             >
-              <motion.div
-                whileHover={{ rotate: 10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <service.icon className="w-10 h-10 text-muted-foreground group-hover:text-accent transition-colors duration-300 mb-4" />
-              </motion.div>
+              <service.icon className="w-10 h-10 text-primary mb-4" />
               <span className="text-sm font-semibold text-foreground text-center">{service.label}</span>
             </motion.div>
           ))}
