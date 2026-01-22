@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Target, Award, Heart, Zap, Shield, Clock, ArrowRight } from "lucide-react";
+import { Target, Award, Heart, Zap, Shield, Clock, ArrowRight } from "lucide-react";
 import { fadeUpVariants, staggerContainer, cardVariants, viewportSettings } from "@/lib/animations";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { BackToTop } from "@/components/ui/BackToTop";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
 const values = [
   {
@@ -91,7 +92,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section with Animated Counters */}
       <section className="py-16 bg-background border-b border-border">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
@@ -101,15 +102,18 @@ const AboutPage = () => {
             variants={staggerContainer}
             className="grid grid-cols-2 md:grid-cols-4 gap-8"
           >
-            {stats.map((stat) => (
+            {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 variants={fadeUpVariants}
                 className="text-center"
               >
-                <div className="text-4xl md:text-5xl font-display font-bold text-primary mb-2">
-                  {stat.value}
-                </div>
+                <AnimatedCounter 
+                  value={stat.value}
+                  className="text-4xl md:text-5xl font-display font-bold text-primary mb-2"
+                  duration={2000}
+                  delay={index * 150}
+                />
                 <div className="text-muted-foreground">{stat.label}</div>
               </motion.div>
             ))}

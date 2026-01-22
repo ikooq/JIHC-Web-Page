@@ -3,9 +3,10 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Phone, Send, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Phone, Send, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { fadeUpVariants, staggerContainer, viewportSettings, slideInLeft, slideInRight } from "@/lib/animations";
+import { submitToGoogleSheets } from "@/lib/googleSheets";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -38,14 +39,24 @@ const ContactSection = () => {
     }
 
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    const result = await submitToGoogleSheets(formData);
 
     setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Message sent successfully!",
-      description: "We'll get back to you within 24 hours.",
-    });
+    
+    if (result.success) {
+      setIsSubmitted(true);
+      toast({
+        title: "Message sent successfully!",
+        description: "We'll get back to you within 24 hours.",
+      });
+    } else {
+      toast({
+        title: "Failed to send message",
+        description: result.error || "Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -220,7 +231,7 @@ const ContactSection = () => {
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="w-5 h-5 border-2 border-cta-foreground/30 border-t-cta-foreground rounded-full animate-spin" />
+                          <Loader2 className="w-5 h-5 animate-spin" />
                           Sending...
                         </>
                       ) : (
