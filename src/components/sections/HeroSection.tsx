@@ -1,18 +1,41 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Zap, Play } from "lucide-react";
 import { fadeUpVariants, staggerContainer } from "@/lib/animations";
 import { FloatingShapes } from "@/components/3d/FloatingShapes";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-hero">
-      {/* 3D Floating shapes */}
-      <FloatingShapes />
+  const sectionRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
 
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 overflow-hidden">
+  // Parallax transforms for different layers
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const floatingY = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  return (
+    <section 
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-hero"
+    >
+      {/* 3D Floating shapes with parallax */}
+      <motion.div style={{ y: floatingY }} className="absolute inset-0">
+        <FloatingShapes />
+      </motion.div>
+
+      {/* Animated gradient background with parallax */}
+      <motion.div 
+        style={{ y: backgroundY }}
+        className="absolute inset-0 overflow-hidden"
+      >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
@@ -31,12 +54,15 @@ const HeroSection = () => {
           transition={{ duration: 2, delay: 0.5 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[80px]"
         />
-      </div>
+      </motion.div>
 
       {/* Grid pattern */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
 
-      <div className="container relative z-10 px-4 md:px-6 py-20 md:py-32">
+      <motion.div 
+        style={{ y: contentY, opacity }}
+        className="container relative z-10 px-4 md:px-6 py-20 md:py-32"
+      >
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -122,40 +148,42 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Stats with 3D cards */}
+          {/* Stats with animated counters */}
           <motion.div
             variants={fadeUpVariants}
             className="grid grid-cols-3 gap-6 md:gap-8 mt-20 pt-10 border-t border-white/10"
           >
             {[
-              { value: "50+", label: "Projects Delivered" },
-              { value: "98%", label: "Client Satisfaction" },
-              { value: "10+", label: "Years Experience", icon: Zap },
-            ].map((stat, index) => (
+              { value: "50+", label: "Projects Delivered", delay: 0 },
+              { value: "98%", label: "Client Satisfaction", delay: 100 },
+              { value: "10+", label: "Years Experience", icon: Zap, delay: 200 },
+            ].map((stat) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + index * 0.1 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="text-center group cursor-default"
               >
                 <div className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white flex items-center justify-center gap-2 group-hover:text-blue-300 transition-colors">
                   {stat.icon && <stat.icon className="w-7 h-7 text-blue-400" />}
-                  {stat.value}
+                  <AnimatedCounter 
+                    value={stat.value} 
+                    duration={2000} 
+                    delay={stat.delay}
+                  />
                 </div>
                 <div className="text-sm md:text-base text-white/50 mt-2 font-medium group-hover:text-white/70 transition-colors">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.8 }}
+        style={{ opacity }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
         <motion.div
