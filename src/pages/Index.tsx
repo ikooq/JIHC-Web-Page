@@ -9,22 +9,25 @@ import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { BackToTop } from "@/components/ui/BackToTop";
+import { PageLoader } from "@/components/ui/PageLoader";
 
 const Index = () => {
   return (
-    <main className="min-h-screen overflow-x-hidden">
-      <ScrollProgress />
-      <Navbar />
-      <BackToTop />
-      <HeroSection />
-      <ServicesSection />
-      <WhyUsSection />
-      <OfferingsSection />
-      <CasesSection />
-      <TestimonialsSection />
-      <ContactSection />
-      <Footer />
-    </main>
+    <PageLoader minDuration={1000}>
+      <main className="min-h-screen overflow-x-hidden">
+        <ScrollProgress />
+        <Navbar />
+        <BackToTop />
+        <HeroSection />
+        <ServicesSection />
+        <WhyUsSection />
+        <OfferingsSection />
+        <CasesSection />
+        <TestimonialsSection />
+        <ContactSection />
+        <Footer />
+      </main>
+    </PageLoader>
   );
 };
 
