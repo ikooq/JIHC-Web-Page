@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Linkedin, Twitter, Github } from "lucide-react";
 import { fadeUpVariants, staggerContainer, viewportSettings } from "@/lib/animations";
+import Logo from "@/components/brand/Logo";
 
 const footerLinks = {
   services: [
@@ -40,8 +41,8 @@ const Footer = () => {
           {/* Brand Column */}
           <motion.div variants={fadeUpVariants} className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center shadow-lg">
-                <span className="text-white font-display font-bold text-2xl">A</span>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center shadow-lg overflow-hidden">
+                <Logo className="h-8 w-8" />
               </div>
               <span className="text-2xl font-display font-bold">Auxility</span>
             </Link>

@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Menu, X } from "lucide-react";
+import Logo from "@/components/brand/Logo";
 
 const navItems = [
   { label: "Services", href: "/services" },
@@ -49,8 +50,8 @@ const Navbar = () => {
           {/* Logo */}
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/30">
-                <span className="text-primary-foreground font-display font-bold text-xl">A</span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/30 overflow-hidden">
+                <Logo className="h-7 w-7" />
               </div>
               <span className={`text-xl font-display font-bold transition-colors duration-300 ${
                 showDarkNav ? "text-foreground" : "text-white"
