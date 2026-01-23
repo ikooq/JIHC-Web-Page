@@ -15,7 +15,7 @@ import { PageLoader } from "@/components/ui/PageLoader";
 const Index = () => {
   return (
     <PageLoader minDuration={1000}>
-      <main className="min-h-screen overflow-x-hidden">
+      <main id="main-content" tabIndex={-1} className="min-h-screen overflow-x-hidden">
         <ScrollProgress />
         <Navbar />
         <BackToTop />

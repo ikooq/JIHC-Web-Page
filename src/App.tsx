@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
+import SkipToContentLink from "@/components/ui/SkipToContentLink";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Cases from "./pages/Cases";
@@ -32,6 +33,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SkipToContentLink targetId="main-content" />
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<PageTransition><Index /></PageTransition>} />
