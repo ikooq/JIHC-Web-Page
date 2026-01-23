@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from "@/components/brand/Logo";
 
 interface PageLoaderProps {
   children: React.ReactNode;
@@ -38,9 +39,9 @@ export const PageLoader = ({ children, minDuration = 800 }: PageLoaderProps) => 
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-glow"
+                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-glow overflow-hidden"
               >
-                <span className="text-primary-foreground font-display font-bold text-2xl">A</span>
+                <Logo className="h-10 w-10" />
               </motion.div>
               
               {/* Orbiting dots */}
