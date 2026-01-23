@@ -39,6 +39,7 @@ export const submitToGoogleSheets = async (data: ContactFormData): Promise<{ suc
   }
 
   try {
+<<<<<<< HEAD
     // Use REST API format: /api/{sheetName}
     // Assuming sheet name is "Contacts" - change if different
     const sheetName = "Contacts";
@@ -46,12 +47,18 @@ export const submitToGoogleSheets = async (data: ContactFormData): Promise<{ suc
     
     const response = await fetch(url, {
       method: "POST",
+=======
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors", // Google Apps Script requires no-cors
+>>>>>>> 575bc8d1ee6c8c6ebb61ce116898567ef7448c78
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
+<<<<<<< HEAD
     const result = await response.json();
     
     if (result.error) {
@@ -59,6 +66,10 @@ export const submitToGoogleSheets = async (data: ContactFormData): Promise<{ suc
     }
 
     return { success: result.success || true };
+=======
+    // With no-cors, we can't read the response, so we assume success
+    return { success: true };
+>>>>>>> 575bc8d1ee6c8c6ebb61ce116898567ef7448c78
   } catch (error) {
     console.error("Error submitting to Google Sheets:", error);
     return { 
