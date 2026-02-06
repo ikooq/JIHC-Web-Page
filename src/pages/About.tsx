@@ -8,35 +8,33 @@ import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { BackToTop } from "@/components/ui/BackToTop";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { SeoHead } from "@/components/seo/SeoHead";
+import { useCopy } from "@/hooks/useCopy";
 
 const values = [
   {
     icon: Target,
-    title: "Excellence",
-    description: "We pursue the highest standards in everything we build, from code quality to user experience.",
+    key: "about_value_excellence",
   },
   {
     icon: Shield,
-    title: "Security First",
-    description: "Security isn't an afterthought—it's built into every layer of our solutions from day one.",
+    key: "about_value_security",
   },
   {
     icon: Heart,
-    title: "Client Partnership",
-    description: "We treat every client relationship as a true partnership, invested in your long-term success.",
+    key: "about_value_partnership",
   },
   {
     icon: Zap,
-    title: "Innovation",
-    description: "We stay ahead of technology trends to deliver cutting-edge solutions that give you competitive advantage.",
+    key: "about_value_innovation",
   },
 ];
 
 const stats = [
-  { value: "10+", label: "Years of Experience" },
-  { value: "50+", label: "Projects Delivered" },
-  { value: "98%", label: "Client Satisfaction" },
-  { value: "30+", label: "Team Members" },
+  { value: "10+", key: "about_stat_experience" },
+  { value: "50+", key: "about_stat_projects" },
+  { value: "98%", key: "about_stat_satisfaction" },
+  { value: "30+", key: "about_stat_team" },
 ];
 
 const team = [
@@ -47,12 +45,18 @@ const team = [
 ];
 
 const AboutPage = () => {
+  const { get } = useCopy();
+
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen overflow-x-hidden">
+      <SeoHead
+        title={get("seo_about_title")}
+        description={get("seo_about_description")}
+      />
       <ScrollProgress />
       <Navbar />
       <BackToTop />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-hero overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-20" />
@@ -61,7 +65,7 @@ const AboutPage = () => {
           animate={{ opacity: 0.5 }}
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 rounded-full blur-[100px]"
         />
-        
+
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <motion.div
             initial="hidden"
@@ -73,20 +77,19 @@ const AboutPage = () => {
               variants={fadeUpVariants}
               className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-semibold mb-6"
             >
-              About Us
+              {get("about_badge")}
             </motion.span>
             <motion.h1
               variants={fadeUpVariants}
               className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white mb-6"
             >
-              Building the Future of{" "}
-              <span className="text-gradient-premium">Digital Health & Finance</span>
+              {get("about_hero_title")}
             </motion.h1>
             <motion.p
               variants={fadeUpVariants}
               className="text-xl text-white/60 max-w-2xl mx-auto"
             >
-              We're a team of passionate engineers, designers, and strategists dedicated to creating transformative software solutions.
+              {get("about_hero_subtitle")}
             </motion.p>
           </motion.div>
         </div>
@@ -104,17 +107,17 @@ const AboutPage = () => {
           >
             {stats.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.key}
                 variants={fadeUpVariants}
                 className="text-center"
               >
-                <AnimatedCounter 
+                <AnimatedCounter
                   value={stat.value}
                   className="text-4xl md:text-5xl font-display font-bold text-primary mb-2"
                   duration={2000}
                   delay={index * 150}
                 />
-                <div className="text-muted-foreground">{stat.label}</div>
+                <div className="text-muted-foreground">{get(stat.key)}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -133,13 +136,13 @@ const AboutPage = () => {
           >
             <motion.div variants={fadeUpVariants}>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-6">
-                Our Mission
+                {get("about_mission_title")}
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                At Auxility, we believe technology should empower organizations to deliver better outcomes for their customers. Our mission is to bridge the gap between innovative ideas and production-ready software.
+                {get("about_mission_p1")}
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                We specialize in FinTech and Healthcare because these industries have the highest impact on people's lives. When we build a payment system that works flawlessly or a telemedicine platform that connects patients with doctors, we're not just writing code—we're improving lives.
+                {get("about_mission_p2")}
               </p>
             </motion.div>
 
@@ -152,12 +155,12 @@ const AboutPage = () => {
                   <Clock className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <div className="font-display font-bold text-foreground">Founded in 2014</div>
-                  <div className="text-muted-foreground text-sm">Toronto, Canada</div>
+                  <div className="font-display font-bold text-foreground">{get("about_founded")}</div>
+                  <div className="text-muted-foreground text-sm">{get("about_location")}</div>
                 </div>
               </div>
               <p className="text-muted-foreground">
-                What started as a small team of three engineers has grown into a full-service development agency serving clients across North America, Europe, and Asia.
+                {get("about_history")}
               </p>
             </motion.div>
           </motion.div>
@@ -178,13 +181,13 @@ const AboutPage = () => {
               variants={fadeUpVariants}
               className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4"
             >
-              Our Values
+              {get("about_values_title")}
             </motion.h2>
             <motion.p
               variants={fadeUpVariants}
               className="text-muted-foreground text-lg max-w-2xl mx-auto"
             >
-              The principles that guide everything we do
+              {get("about_values_subtitle")}
             </motion.p>
           </motion.div>
 
@@ -197,7 +200,7 @@ const AboutPage = () => {
           >
             {values.map((value) => (
               <motion.div
-                key={value.title}
+                key={value.key}
                 variants={cardVariants}
                 whileHover={{ y: -8 }}
                 className="card-3d p-8"
@@ -206,10 +209,10 @@ const AboutPage = () => {
                   <value.icon className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-display font-bold text-foreground mb-3">
-                  {value.title}
+                  {get(`${value.key}_title`)}
                 </h3>
                 <p className="text-muted-foreground">
-                  {value.description}
+                  {get(`${value.key}_desc`)}
                 </p>
               </motion.div>
             ))}
@@ -231,13 +234,13 @@ const AboutPage = () => {
               variants={fadeUpVariants}
               className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4"
             >
-              Leadership Team
+              {get("about_team_title")}
             </motion.h2>
             <motion.p
               variants={fadeUpVariants}
               className="text-muted-foreground text-lg max-w-2xl mx-auto"
             >
-              Experienced leaders driving innovation and excellence
+              {get("about_team_subtitle")}
             </motion.p>
           </motion.div>
 
@@ -284,18 +287,18 @@ const AboutPage = () => {
               variants={fadeUpVariants}
               className="text-3xl md:text-5xl font-display font-bold text-white mb-6"
             >
-              Let's Work Together
+              {get("about_cta_title")}
             </motion.h2>
             <motion.p
               variants={fadeUpVariants}
               className="text-white/60 text-lg mb-8 max-w-2xl mx-auto"
             >
-              Ready to start your next project? We'd love to hear from you and discuss how we can help.
+              {get("about_cta_subtitle")}
             </motion.p>
             <motion.div variants={fadeUpVariants}>
               <Link to="/#contact">
                 <Button variant="cta" size="lg" className="shadow-glow">
-                  Get in Touch
+                  {get("nav_contact_btn")}
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>

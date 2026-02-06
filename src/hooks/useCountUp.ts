@@ -56,9 +56,10 @@ export const useCountUp = ({
   return { ref, displayValue, count };
 };
 
-// Parse stat values like "50+", "98%", "10+"
-export const parseStatValue = (value: string): { number: number; suffix: string; prefix: string } => {
-  const match = value.match(/^([^\d]*)(\d+)(.*)$/);
+// Parse stat values like "50+", "98%", "10+" (value может быть строкой или числом из Google Sheets)
+export const parseStatValue = (value: string | number | null | undefined): { number: number; suffix: string; prefix: string } => {
+  const str = value != null ? String(value) : "";
+  const match = str.match(/^([^\d]*)(\d+)(.*)$/);
   if (match) {
     return {
       prefix: match[1] || "",

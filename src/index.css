@@ -5,6 +5,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
+  /* Framer Motion useScroll: container needs non-static position for scroll offset */
+  html,
+  body {
+    position: relative;
+  }
   :root {
     /* Premium Blue & White Palette */
     --background: 210 40% 98%;

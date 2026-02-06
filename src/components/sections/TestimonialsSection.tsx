@@ -2,58 +2,76 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { fadeUpVariants, staggerContainer, viewportSettings } from "@/lib/animations";
+import { useGoogleSheetsData } from "@/hooks/useGoogleSheetsData";
+import { useCopy } from "@/hooks/useCopy";
+import { useLanguage } from "@/hooks/useLanguage";
+import { TestimonialData } from "@/lib/googleSheetsCMS";
+import { pickLocalized } from "@/lib/i18n";
 
-const testimonials = [
+const defaultTestimonials: TestimonialData[] = [
   {
-    id: 1,
+    id: "1",
     quote: "Auxility delivered our banking platform ahead of schedule with exceptional attention to security. Their FinTech expertise saved us months of development time.",
     author: "Sarah Chen",
     role: "CTO, Digital Banking Startup",
     company: "FinanceFlow",
+    active: "TRUE",
   },
   {
-    id: 2,
+    id: "2",
     quote: "The telemedicine solution they built has transformed how we deliver care. Patient satisfaction increased by 40% within the first quarter.",
     author: "Dr. Michael Roberts",
     role: "Chief Medical Officer",
     company: "Regional Health Network",
+    active: "TRUE",
   },
   {
-    id: 3,
+    id: "3",
     quote: "Working with Auxility felt like having an in-house team. They understood our compliance requirements from day one and delivered a HIPAA-compliant solution.",
     author: "Emily Watson",
     role: "VP of Technology",
     company: "MedTech Solutions",
-  },
-  {
-    id: 4,
-    quote: "Their market research helped us pivot our product strategy before development. We avoided costly mistakes and launched with product-market fit.",
-    author: "James Okonkwo",
-    role: "Founder & CEO",
-    company: "PaymentPro",
-  },
-  {
-    id: 5,
-    quote: "Outstanding technical expertise combined with genuine care for our business outcomes. The ICU system they built is now saving lives daily.",
-    author: "Dr. Lisa Park",
-    role: "Director of Critical Care",
-    company: "Metropolitan Hospital",
+    active: "TRUE",
   },
 ];
 
 const TestimonialsSection = () => {
+  const { get } = useCopy();
+  const { language } = useLanguage();
+  const { data: testimonialsData, loading, error } = useGoogleSheetsData<TestimonialData>({
+    sheetName: "Testimonials",
+  });
+
+  // Логирование для отладки
+  useEffect(() => {
+    console.log('[TestimonialsSection] Testimonials data:', { testimonialsData, loading, error });
+    console.log('[TestimonialsSection] Using data:', testimonialsData && testimonialsData.length > 0 ? 'FROM GOOGLE SHEETS ✅' : 'FALLBACK DATA ⚠️');
+  }, [testimonialsData, loading, error]);
+
+  // Фильтровать только активные отзывы
+  const testimonials = (
+    testimonialsData && testimonialsData.length > 0
+      ? testimonialsData.filter((t) => t.active === "TRUE" || t.active === "true" || t.active === "1")
+      : defaultTestimonials.filter((t) => t.active === "TRUE")
+  ).map((t) => ({
+    ...t,
+    quote: pickLocalized(t as any, "quote", language, t.quote),
+    role: pickLocalized(t as any, "role", language, t.role),
+    company: pickLocalized(t as any, "company", language, t.company),
+  }));
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || testimonials.length === 0) return;
     
     const interval = setInterval(() => {
       setActiveIndex((current) => (current + 1) % testimonials.length);
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, testimonials.length]);
 
   const goToPrevious = () => {
     setIsAutoPlaying(false);
@@ -85,19 +103,19 @@ const TestimonialsSection = () => {
             variants={fadeUpVariants}
             className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-6 tracking-wide"
           >
-            Client Stories
+            {get("testimonials_badge")}
           </motion.span>
           <motion.h2
             variants={fadeUpVariants}
             className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6 leading-tight"
           >
-            What Our Clients Say
+            {get("testimonials_heading")}
           </motion.h2>
           <motion.p
             variants={fadeUpVariants}
             className="text-muted-foreground text-lg md:text-xl leading-relaxed"
           >
-            Don't just take our word for it — hear from the leaders we've helped succeed.
+            {get("testimonials_subheading")}
           </motion.p>
         </motion.div>
 
@@ -116,40 +134,42 @@ const TestimonialsSection = () => {
             </div>
 
             {/* Testimonial content */}
-            <div className="relative min-h-[200px]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  <p className="text-xl md:text-2xl lg:text-3xl text-foreground font-medium leading-relaxed mb-10 pr-12">
-                    "{testimonials[activeIndex].quote}"
-                  </p>
+            {testimonials.length > 0 && (
+              <div className="relative min-h-[200px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  >
+                    <p className="text-xl md:text-2xl lg:text-3xl text-foreground font-medium leading-relaxed mb-10 pr-12">
+                      "{testimonials[activeIndex]?.quote || ""}"
+                    </p>
 
-                  <div className="flex items-center gap-5">
-                    {/* Avatar */}
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center text-accent-foreground font-display font-bold text-xl shadow-lg shadow-accent/25"
-                    >
-                      {testimonials[activeIndex].author.split(" ").map(n => n[0]).join("")}
-                    </motion.div>
-                    
-                    <div>
-                      <div className="font-display font-bold text-foreground text-lg">
-                        {testimonials[activeIndex].author}
-                      </div>
-                      <div className="text-muted-foreground">
-                        {testimonials[activeIndex].role}, {testimonials[activeIndex].company}
+                    <div className="flex items-center gap-5">
+                      {/* Avatar */}
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center text-accent-foreground font-display font-bold text-xl shadow-lg shadow-accent/25"
+                      >
+                        {testimonials[activeIndex]?.author?.split(" ").map((n: string) => n[0]).join("") || ""}
+                      </motion.div>
+                      
+                      <div>
+                        <div className="font-display font-bold text-foreground text-lg">
+                          {testimonials[activeIndex]?.author || ""}
+                        </div>
+                        <div className="text-muted-foreground">
+                          {testimonials[activeIndex]?.role || ""}, {testimonials[activeIndex]?.company || ""}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            )}
 
             {/* Navigation */}
             <div className="flex items-center justify-between mt-10 pt-8 border-t border-border">

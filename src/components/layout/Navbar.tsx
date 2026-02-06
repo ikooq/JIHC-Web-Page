@@ -3,16 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { Menu, X } from "lucide-react";
 import Logo from "@/components/brand/Logo";
+import { useCopy } from "@/hooks/useCopy";
 
-const navItems = [
-  { label: "Services", href: "/services" },
-  { label: "Case Studies", href: "/cases" },
-  { label: "About", href: "/about" },
+const navHrefs = [
+  { key: "nav_services" as const, href: "/services" },
+  { key: "nav_cases" as const, href: "/cases" },
+  { key: "nav_about" as const, href: "/about" },
 ];
 
 const Navbar = () => {
+  const { get } = useCopy();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -56,16 +59,16 @@ const Navbar = () => {
               <span className={`text-xl font-display font-bold transition-colors duration-300 ${
                 showDarkNav ? "text-foreground" : "text-white"
               }`}>
-                Auxility
+                {get("site_name")}
               </span>
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item, index) => (
+            {navHrefs.map((item, index) => (
               <motion.div
-                key={item.label}
+                key={item.key}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 + 0.3 }}
@@ -77,12 +80,12 @@ const Navbar = () => {
                       ? showDarkNav
                         ? "text-primary bg-primary/10"
                         : "text-white bg-white/20"
-                      : showDarkNav 
-                        ? "text-muted-foreground hover:text-foreground hover:bg-muted" 
+                      : showDarkNav
+                        ? "text-muted-foreground hover:text-foreground hover:bg-muted"
                         : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
-                  {item.label}
+                  {get(item.key)}
                 </Link>
               </motion.div>
             ))}
@@ -97,6 +100,14 @@ const Navbar = () => {
             >
               <ThemeToggle scrolled={showDarkNav} />
             </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.45 }}
+            >
+              <LanguageSwitcher scrolled={showDarkNav} />
+            </motion.div>
             
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -109,7 +120,7 @@ const Navbar = () => {
                   size="sm"
                   className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
                 >
-                  Get in Touch
+                  {get("nav_contact_btn")}
                 </Button>
               </Link>
             </motion.div>
@@ -143,9 +154,9 @@ const Navbar = () => {
             >
               <div className={`py-4 border-t ${showDarkNav ? "border-border" : "border-white/10"}`}>
                 <div className="flex flex-col gap-1">
-                  {navItems.map((item, index) => (
+                  {navHrefs.map((item, index) => (
                     <motion.div
-                      key={item.label}
+                      key={item.key}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
@@ -162,13 +173,16 @@ const Navbar = () => {
                               : "text-white/70 hover:text-white hover:bg-white/10"
                         }`}
                       >
-                        {item.label}
+                        {get(item.key)}
                       </Link>
                     </motion.div>
                   ))}
+                  <div className="px-4 pt-2">
+                    <LanguageSwitcher scrolled={showDarkNav} />
+                  </div>
                   <Link to="/#contact">
                     <Button variant="accent" size="sm" className="mt-3 w-full">
-                      Get in Touch
+                      {get("nav_contact_btn")}
                     </Button>
                   </Link>
                 </div>

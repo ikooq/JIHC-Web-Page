@@ -11,22 +11,59 @@ import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { BackToTop } from "@/components/ui/BackToTop";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { ImpactDashboard } from "@/components/sections/ImpactDashboard";
+import { SeoHead } from "@/components/seo/SeoHead";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { useCopy } from "@/hooks/useCopy";
 
 const Index = () => {
+  const { get } = useCopy();
+
   return (
     <PageLoader minDuration={1000}>
+      <SeoHead
+        title={get("seo_index_title")}
+        description={get("seo_index_description")}
+      />
       <main id="main-content" tabIndex={-1} className="min-h-screen overflow-x-hidden">
         <ScrollProgress />
         <Navbar />
         <BackToTop />
-        <HeroSection />
-        <ServicesSection />
-        <WhyUsSection />
-        <OfferingsSection />
-        <CasesSection />
-        <TestimonialsSection />
-        <VideoTestimonialsSection />
-        <ContactSection />
+        <ScrollReveal>
+          <HeroSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <ServicesSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <WhyUsSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <OfferingsSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <CasesSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <TestimonialsSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <VideoTestimonialsSection />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <ImpactDashboard />
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          <ContactSection />
+        </ScrollReveal>
         <Footer />
       </main>
     </PageLoader>

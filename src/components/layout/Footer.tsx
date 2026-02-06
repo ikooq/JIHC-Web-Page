@@ -3,29 +3,31 @@ import { Link } from "react-router-dom";
 import { Linkedin, Twitter, Github } from "lucide-react";
 import { fadeUpVariants, staggerContainer, viewportSettings } from "@/lib/animations";
 import Logo from "@/components/brand/Logo";
+import { useCopy } from "@/hooks/useCopy";
 
 const footerLinks = {
   services: [
-    { label: "Web Development", href: "/services" },
-    { label: "Mobile Development", href: "/services" },
-    { label: "Consulting", href: "/services" },
-    { label: "System Integration", href: "/services" },
+    { key: "footer_link_web_dev", href: "/services" },
+    { key: "footer_link_mobile_dev", href: "/services" },
+    { key: "footer_link_consulting", href: "/services" },
+    { key: "footer_link_integration", href: "/services" },
   ],
   company: [
-    { label: "About Us", href: "/about" },
-    { label: "Case Studies", href: "/cases" },
-    { label: "Testimonials", href: "/#testimonials" },
-    { label: "Contact", href: "/#contact" },
+    { key: "footer_link_about", href: "/about" },
+    { key: "footer_link_cases", href: "/cases" },
+    { key: "footer_link_testimonials", href: "/#testimonials" },
+    { key: "footer_link_contact", href: "/#contact" },
   ],
   industries: [
-    { label: "FinTech", href: "/services" },
-    { label: "Healthcare", href: "/services" },
-    { label: "Banking", href: "/services" },
-    { label: "Telemedicine", href: "/services" },
+    { key: "footer_link_fintech", href: "/services" },
+    { key: "footer_link_healthcare", href: "/services" },
+    { key: "footer_link_banking", href: "/services" },
+    { key: "footer_link_telemedicine", href: "/services" },
   ],
 };
 
 const Footer = () => {
+  const { get } = useCopy();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -44,10 +46,10 @@ const Footer = () => {
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center shadow-lg overflow-hidden">
                 <Logo className="h-8 w-8" />
               </div>
-              <span className="text-2xl font-display font-bold">Auxility</span>
+              <span className="text-2xl font-display font-bold">{get("site_name")}</span>
             </Link>
             <p className="text-primary-foreground/60 max-w-sm mb-8 leading-relaxed">
-              Building secure, compliant, and user-friendly custom software for FinTech and Healthcare industries.
+              {get("footer_tagline")}
             </p>
             <div className="flex gap-3">
               {[
@@ -71,20 +73,20 @@ const Footer = () => {
 
           {/* Links Columns */}
           {[
-            { title: "Services", links: footerLinks.services },
-            { title: "Company", links: footerLinks.company },
-            { title: "Industries", links: footerLinks.industries },
+            { titleKey: "footer_services" as const, links: footerLinks.services },
+            { titleKey: "footer_company" as const, links: footerLinks.company },
+            { titleKey: "footer_industries" as const, links: footerLinks.industries },
           ].map((column) => (
-            <motion.div key={column.title} variants={fadeUpVariants}>
-              <h4 className="font-display font-bold text-lg mb-6">{column.title}</h4>
+            <motion.div key={column.titleKey} variants={fadeUpVariants}>
+              <h4 className="font-display font-bold text-lg mb-6">{get(column.titleKey)}</h4>
               <ul className="space-y-4">
                 {column.links.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.key}>
                     <Link
                       to={link.href}
                       className="text-primary-foreground/60 hover:text-white transition-colors text-sm"
                     >
-                      {link.label}
+                      {get(link.key)}
                     </Link>
                   </li>
                 ))}
@@ -102,14 +104,14 @@ const Footer = () => {
           className="pt-10 border-t border-primary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-6"
         >
           <p className="text-primary-foreground/40 text-sm">
-            © {currentYear} Auxility. All rights reserved.
+            © {currentYear} {get("site_name")}. {get("footer_copyright")}
           </p>
           <div className="flex gap-8 text-sm">
             <a href="#" className="text-primary-foreground/40 hover:text-primary-foreground transition-colors">
-              Privacy Policy
+              {get("footer_privacy")}
             </a>
             <a href="#" className="text-primary-foreground/40 hover:text-primary-foreground transition-colors">
-              Terms of Service
+              {get("footer_terms")}
             </a>
           </div>
         </motion.div>

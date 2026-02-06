@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +7,40 @@ import { Mail, MapPin, Phone, Send, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { fadeUpVariants, staggerContainer, viewportSettings, slideInLeft, slideInRight } from "@/lib/animations";
 import { submitToGoogleSheets } from "@/lib/googleSheets";
+import { useGoogleSheetsData } from "@/hooks/useGoogleSheetsData";
+import { ContactData } from "@/lib/googleSheetsCMS";
+import { useCopy } from "@/hooks/useCopy";
+import { useLanguage } from "@/hooks/useLanguage";
+import { pickLocalized } from "@/lib/i18n";
+
+const defaultContactItems = [
+  { icon: Mail, text: "hello@auxility.ca", href: "mailto:hello@auxility.ca" },
+  { icon: MapPin, text: "Toronto, Canada" },
+  { icon: Phone, text: "+1 (416) 555-0123" },
+];
 
 const ContactSection = () => {
+  const { get } = useCopy();
+  const { language } = useLanguage();
+  const { data: contactData } = useGoogleSheetsData<ContactData>({ sheetName: "Contact" });
+  const contactItems = useMemo(() => {
+    if (!contactData || contactData.length === 0) return defaultContactItems;
+    const byField = contactData.reduce<Record<string, string>>((acc, row) => {
+      if (row.field) {
+        const v = pickLocalized(row as any, "value", language, String((row as any).value ?? ""));
+        if (v) acc[String(row.field).toLowerCase()] = v;
+      }
+      return acc;
+    }, {});
+    const email = byField.email ?? defaultContactItems[0].text;
+    const address = byField.address ?? defaultContactItems[1].text;
+    const phone = byField.phone ?? defaultContactItems[2].text;
+    return [
+      { icon: Mail, text: email, href: email ? `mailto:${email}` : undefined },
+      { icon: MapPin, text: address },
+      { icon: Phone, text: phone },
+    ];
+  }, [contactData, language]);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -20,10 +52,10 @@ const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       toast({
-        title: "Please fill in all fields",
+        title: get("contact_toast_fill_fields"),
         variant: "destructive",
       });
       return;
@@ -32,23 +64,23 @@ const ContactSection = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast({
-        title: "Please enter a valid email address",
+        title: get("contact_toast_invalid_email"),
         variant: "destructive",
       });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     const result = await submitToGoogleSheets(formData);
 
     setIsSubmitting(false);
-    
+
     if (result.success) {
       setIsSubmitted(true);
       toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 24 hours.",
+        title: get("contact_toast_success_title"),
+        description: get("contact_toast_success_desc"),
       });
     } else {
       toast({
@@ -88,23 +120,18 @@ const ContactSection = () => {
           {/* Left content */}
           <motion.div variants={slideInLeft}>
             <span className="inline-block px-4 py-2 rounded-full bg-primary-foreground/10 text-accent text-sm font-semibold mb-6">
-              Let's Talk
+              {get("contact_badge")}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-primary-foreground mb-8 leading-tight">
-              Ready to Transform Your Business?
+              {get("contact_heading")}
             </h2>
             <p className="text-primary-foreground/60 text-lg md:text-xl mb-10 leading-relaxed">
-              Whether you're launching a new product or modernizing existing systems, 
-              we're here to help you succeed. Let's discuss your project.
+              {get("contact_subheading")}
             </p>
 
-            {/* Contact info */}
+            {/* Contact info — из Google Sheets (лист Contact) или fallback */}
             <div className="space-y-5 mb-10">
-              {[
-                { icon: Mail, text: "hello@auxility.ca", href: "mailto:hello@auxility.ca" },
-                { icon: MapPin, text: "Toronto, Canada" },
-                { icon: Phone, text: "+1 (416) 555-0123" },
-              ].map((item, index) => (
+              {contactItems.map((item, index) => (
                 <motion.div
                   key={item.text}
                   initial={{ opacity: 0, x: -20 }}
@@ -134,10 +161,10 @@ const ContactSection = () => {
             {/* Trust badges */}
             <div className="flex items-center gap-6 text-primary-foreground/40 text-sm">
               <span className="flex items-center gap-2">
-                <span className="text-lg">🔒</span> Your data is secure
+                <span className="text-lg">🔒</span> {get("contact_secure")}
               </span>
               <span className="flex items-center gap-2">
-                <span className="text-lg">⚡</span> Response within 24h
+                <span className="text-lg">⚡</span> {get("contact_24h")}
               </span>
             </div>
           </motion.div>
@@ -160,10 +187,10 @@ const ContactSection = () => {
                     <CheckCircle className="w-10 h-10 text-accent" />
                   </motion.div>
                   <h3 className="text-2xl font-display font-bold text-foreground mb-4">
-                    Thank You!
+                    {get("contact_success_title")}
                   </h3>
                   <p className="text-muted-foreground mb-8">
-                    We've received your message and will be in touch shortly.
+                    {get("contact_success_message")}
                   </p>
                   <Button
                     variant="outline"
@@ -172,19 +199,19 @@ const ContactSection = () => {
                       setFormData({ name: "", email: "", message: "" });
                     }}
                   >
-                    Send Another Message
+                    {get("contact_send_another")}
                   </Button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-3">
-                      Your Name
+                      {get("contact_form_name")}
                     </label>
                     <Input
                       id="name"
                       type="text"
-                      placeholder="John Doe"
+                      placeholder={get("contact_placeholder_name")}
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="h-14 rounded-xl border-border/50 focus:border-accent bg-background/50"
@@ -194,12 +221,12 @@ const ContactSection = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-3">
-                      Email Address
+                      {get("contact_form_email")}
                     </label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="john@company.com"
+                      placeholder={get("contact_placeholder_email")}
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="h-14 rounded-xl border-border/50 focus:border-accent bg-background/50"
@@ -209,11 +236,11 @@ const ContactSection = () => {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-3">
-                      Tell Us About Your Project
+                      {get("contact_form_message")}
                     </label>
                     <Textarea
                       id="message"
-                      placeholder="I'm looking to build a..."
+                      placeholder={get("contact_placeholder_message")}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="min-h-[140px] resize-none rounded-xl border-border/50 focus:border-accent bg-background/50"
@@ -232,11 +259,11 @@ const ContactSection = () => {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
-                          Sending...
+                          {get("contact_sending")}
                         </>
                       ) : (
                         <>
-                          Send Message
+                          {get("contact_submit")}
                           <Send className="w-5 h-5" />
                         </>
                       )}
@@ -244,7 +271,7 @@ const ContactSection = () => {
                   </motion.div>
 
                   <p className="text-xs text-muted-foreground text-center pt-2">
-                    By submitting, you agree to our privacy policy.
+                    {get("contact_privacy")}
                   </p>
                 </form>
               )}

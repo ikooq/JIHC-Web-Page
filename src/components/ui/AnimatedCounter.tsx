@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { useCountUp, parseStatValue } from "@/hooks/useCountUp";
 
 interface AnimatedCounterProps {
-  value: string;
+  /** Строка ("50+", "98%") или число из Google Sheets */
+  value: string | number;
   className?: string;
   duration?: number;
   delay?: number;
