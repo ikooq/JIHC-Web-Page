@@ -1,5 +1,7 @@
 # 🏥💳 Auxility Marketing Hub
 
+> **Authorship:** every commit in this repository was made by mukhammad and the Lovable / gpt-engineer bot, not by the owner of this account. The repository name (JIHC-Web-Page) does not match the project it contains.
+
 > Enterprise-grade marketing website for FinTech & Healthcare software development company.
 
 ![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react)
